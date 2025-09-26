@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Course, Student
 from django.db.models import Count, Avg, Sum, Max
-from django.db.models import F
+from django.db.models import F , Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
@@ -26,24 +26,24 @@ def index(request):
 #-------------- Fetch by Unique Field
 
 # def student_get(request):
-#     try:
-#         student = Student.objects.get(name="Affan")
-#     except ObjectDoesNotExist:
-#         student = None
-#     return render(request, 'student_details.html', {'student': student})
+    try:
+        student = Student.objects.get(name="Affan")
+    except ObjectDoesNotExist:
+        student = None
+    return render(request, 'student_details.html', {'student': student})
 
 
 
 #-------------- Multiple Conditions
 
 # def student_get(request):
-#     try:
-#         student = Student.objects.get(name="Sinan", age=19)
-#     except Student.DoesNotExist:
-#         student = None
-#     except Student.MultipleObjectsReturned:
-#         student = None
-#     return render(request, 'student_details.html', {'student': student})
+    try:
+        student = Student.objects.get(name="Sinan", age=19)
+    except Student.DoesNotExist:
+        student = None
+    except Student.MultipleObjectsReturned:
+        student = None
+    return render(request, 'student_details.html', {'student': student})
 
 
 
@@ -78,12 +78,12 @@ def student_get(request):
 #-------------- lookup expressions
 
 # def student_filter(request):
-#     # students = Student.objects.filter(age__gt = 21)
-#     # students = Student.objects.filter(age__lt = 21)
-#     # students = Student.objects.filter(name__contains="na")
-#     # students = Student.objects.filter(name__startswith="A")
-#     students = Student.objects.filter(age__in=[19,23,20])
-#     return render(request, 'student_filter.html', {'students': students})
+    # students = Student.objects.filter(age__gt = 21)
+    # students = Student.objects.filter(age__lt = 21)
+    # students = Student.objects.filter(name__contains="na")
+    # students = Student.objects.filter(name__startswith="A")
+    students = Student.objects.filter(age__in=[19,23,20])
+    return render(request, 'student_filter.html', {'students': students})
 
 
 
@@ -110,24 +110,24 @@ def student_filter(request):
 #--------------- Exclude by One Field
 
 # def student_exclude(request):
-#     students = Student.objects.exclude(age=24)
-#     return render(request, 'student_exclude.html', {'students': students})
+    students = Student.objects.exclude(age=24)
+    return render(request, 'student_exclude.html', {'students': students})
 
 
 
 #--------------- Exclude Multiple Conditions
 
 # def student_exclude(request):
-#     students = Student.objects.exclude(name="Sinan", age=19)
-#     return render(request, 'student_exclude.html', {'students': students})
+    students = Student.objects.exclude(name="Sinan", age=19)
+    return render(request, 'student_exclude.html', {'students': students})
 
 
 
 #--------------- Exclude with Lookups
 
 # def student_exclude(request):
-#     students = Student.objects.exclude(age__gt=22)
-#     return render(request, 'student_exclude.html', {'students': students})
+    students = Student.objects.exclude(age__gt=22)
+    return render(request, 'student_exclude.html', {'students': students})
 
 
 
@@ -144,6 +144,10 @@ def student_filter(request):
 def student_exclude(request):
     students = Student.objects.exclude(age__in=[21,22,23])
     return render(request, 'student_exclude.html', {'students': students})
+
+
+
+
 
 
 
@@ -174,94 +178,161 @@ def student_lookup(request):
 
 
 
-def course_list(request):
+
+
+#=================================== Q Objects ============================================== 
+
+
+
+#---------------- OR Condition
+
+# def student_q(request):
+    students = Student.objects.filter(Q(age__gt=21) | Q(name="Sinan"))
+    return render(request, 'student_q.html', {'students': students})
+
+
+
+#---------------- AND Condition
+
+# def student_q(request):
+#     students = Student.objects.filter(Q(age__gt=21) & Q(name="Affan"))
+#     return render(request, 'student_q.html', {'students': students})
+
+
+
+#---------------- NOT Condition
+
+# def student_q(request):
+    students = Student.objects.filter(~Q(name="Sinan"))
+    return render(request, 'student_q.html', {'students': students})
+
+
+
+#---------------- NOT Condition
+
+def student_q(request):
+    students = Student.objects.filter(
+        Q(age__gt=20) & (Q(name="Affan") | Q(name="Nishad"))
+    )
+    return render(request, 'student_q.html', {'students': students})
+
+
+
+
+
+
+#=================================== annotate() ============================================== 
+
+
+
+
+#---------------- Count related objects
+
+# def student_annotate(request):
     courses = Course.objects.annotate(student_count=Count('student'))
-    return render(request, 'courses_list.html', {'courses': courses})
+    return render(request, 'student_annotate.html', {'courses': courses})
 
 
-# def course_list(request):
+
+#---------------- Average Age per Student
+
+# def student_annotate(request):
 #     courses = Course.objects.annotate(avg_age=Avg('student__age'))
-#     return render(request, 'courses_list.html', {'courses': courses})
+#     return render(request, 'student_annotate.html', {'courses': courses})
 
 
-# def course_list(request):
-#     courses = Course.objects.annotate(max_age=Max('student__age'))
-#     return render(request, 'courses_list.html', {'courses': courses})
 
-# def course_list(request):
-#     courses = Course.objects.annotate(student_count=Sum('student'))
-#     return render(request, 'courses_list.html', {'courses': courses})
+#---------------- Maximum Age of Student
+
+# def student_annotate(request):
+    courses = Course.objects.annotate(max_age=Max('student__age'))
+    return render(request, 'student_annotate.html', {'courses': courses})
 
 
-# def course_list(request):
-#     courses = Course.objects.annotate(student_count=Count('student'),
-#                                       max_age=Max('student__age'),
-#                                       avg_age=Avg('student__age')
-#                                       )
-#     return render(request, 'courses_list.html', {'courses': courses})
+
+#---------------- Sum of Student
+
+# def student_annotate(request):
+    courses = Course.objects.annotate(student_count=Sum('student'))
+    return render(request, 'student_annotate.html', {'courses': courses})
+
+
+
+#---------------- Multiple or More anoatations
+
+def student_annotate(request):
+    courses = Course.objects.annotate(student_count=Count('student'),
+                                      max_age=Max('student__age'),
+                                      avg_age=Avg('student__age')
+                                      )
+    return render(request, 'student_annotate.html', {'courses': courses})
+
+
+
+
 
 
 
 
 # def course_list(request):
 #     courses = Student.objects.aggregate(avg_age=Avg('age'))
-#     return render(request, 'courses_list.html', {'courses': courses})
+#     return render(request, 'student_annotate.html', {'courses': courses})
 
 
 # def course_list(request):
 #     courses = Student.objects.aggregate(sum_age=Sum('age'))
-#     return render(request, 'courses_list.html', {'courses':courses})
+#     return render(request, 'student_annotate.html', {'courses':courses})
 
 # def course_list(request):
 #     courses = Student.objects.aggregate(max_age=Max('age'))
-#     return render(request, 'courses_list.html', {'courses': courses})
+#     return render(request, 'student_annotate.html', {'courses': courses})
 
 # def course_list(request):
 #     courses = Student.objects.aggregate(avg_age=Avg('age'),
 #                                         sum_age=Sum('age'),
 #                                         max_age=Max('age')
 #                                         )
-#     return render(request, 'courses_list.html', {'courses': courses})
+#     return render(request, 'student_annotate.html', {'courses': courses})
 
 
 # def course_list(request):
 #     students = Student.objects.values()
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
 
 # def course_list(request):
 #     students = Student.objects.filter(age__gt=22).values('name')
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
 
 # def course_list(request):
 #     students = Student.objects.values('name','age').order_by('age')
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
 
 # def course_list(request):
 #     students = Student.objects.values_list()
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
 
 # def course_list(request):
 #     students = Student.objects.filter(age__gt=22).values_list('name', flat=True)
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
 
 # def course_list(request):
 #     students = Student.objects.filter(age__gt=21).values_list('name', 'course').order_by('age')
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
 
 # def course_list(request):
 #     students = Student.objects.update(age=F('age') + 1)
 #     students = Student.objects.all()
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
 # def course_list(request):
 #     course = Course.objects.get(title='Python')
 #     Student.objects.filter(course=course).update(age=F('age') + 2)
 #     students = Student.objects.all()
-#     return render(request, 'courses_list.html', {'students': students})
+#     return render(request, 'student_annotate.html', {'students': students})
 
