@@ -315,20 +315,44 @@ def student_aggregate(request):
 
 
 
-def student_value(request):
+#---------------- Return specific fields
+
+# def student_value(request):
+    students = Student.objects.values('id','name')
+    return render(request, 'student_value.html', {'students': students})
+
+
+
+#---------------- All fields as dicts
+
+# def student_value(request):
     students = Student.objects.values()
     return render(request, 'student_value.html', {'students': students})
 
 
-def student_value(request):
-    students = Student.objects.filter(age__gt=22).values('name')
+
+#---------------- Chaining with filter
+
+# def student_value(request):
+    students = Student.objects.filter(age__gt=22).values('name', 'age')
     return render(request, 'student_value.html', {'students': students})
 
 
-# def student_value(request):
-#     students = Student.objects.values('name','age').order_by('age')
-#     return render(request, 'student_value.html', {'students': students})
 
+#---------------- Ordering with values
+
+def student_value(request):
+    students = Student.objects.values('name','age').order_by('age')
+    return render(request, 'student_value.html', {'students': students})
+
+
+
+
+
+
+
+
+#---------------- 
 
 # def student_aggregate(request):
 #     students = Student.objects.values_list()
