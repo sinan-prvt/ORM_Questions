@@ -147,6 +147,30 @@ def student_exclude(request):
 
 
 
+#=================================== Query Lookups() Method ============================================== 
+
+def student_lookup(request):
+    # students = Student.objects.filter(name__exact="Sinan")                          # Exact match
+    # students = Student.objects.filter(name__iexact="sinan")                         # Case-insensitive exact
+    # students = Student.objects.filter(name__contains="an")                          # Contains
+    # students = Student.objects.filter(name__icontains="AN")                         # Case-insensitive Contains
+
+    # students = Student.objects.filter(age__gt=21)                                   # Greater than
+    # students = Student.objects.filter(age__lt=23)                                   # Less than
+    # students = Student.objects.filter(age__gte=23)                                  # Greater than eqaul to
+    # students = Student.objects.filter(age__lte=23)                                  # Less than eqaul to
+
+    # students = Student.objects.filter(age__in=[19,22])                              # In list
+
+    # students = Student.objects.filter(age__range=[19, 22])                          # Range
+
+    # students = Student.objects.filter(name__startswith="A")                         # Startswith
+    # students = Student.objects.filter(name__istartswith="a")                        # Case-insensitive Startswith
+    # students = Student.objects.filter(name__endswith="n")                           # Endswith
+    students = Student.objects.filter(name__iendswith="N")                            # Case-insensitive Endswith
+    return render(request, 'student_lookup.html', {'students': students})
+
+
 
 
 
