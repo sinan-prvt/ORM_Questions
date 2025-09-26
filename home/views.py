@@ -14,7 +14,7 @@ def index(request):
 
 #-------------- Fetch by primary key
 
-# def student_detail(request):
+# def student_get(request):
 #     try:
 #         student = Student.objects.get(id=1)
 #     except ObjectDoesNotExist:
@@ -25,7 +25,7 @@ def index(request):
 
 #-------------- Fetch by Unique Field
 
-# def student_detail(request):
+# def student_get(request):
 #     try:
 #         student = Student.objects.get(name="Affan")
 #     except ObjectDoesNotExist:
@@ -36,7 +36,7 @@ def index(request):
 
 #-------------- Multiple Conditions
 
-# def student_detail(request):
+# def student_get(request):
 #     try:
 #         student = Student.objects.get(name="Sinan", age=19)
 #     except Student.DoesNotExist:
@@ -49,7 +49,7 @@ def index(request):
 
 #-------------- get_or_create() – Avoids exception by creating if not found
 
-def student_detail(request):
+def student_get(request):
     student, created = Student.objects.get_or_create(age=22)
     return render(request, 'student_details.html', {'student': student, 'created': created} )
 
@@ -106,6 +106,44 @@ def student_filter(request):
 
 #=================================== exclude() Method ============================================== 
 
+
+#--------------- Exclude by One Field
+
+# def student_exclude(request):
+#     students = Student.objects.exclude(age=24)
+#     return render(request, 'student_exclude.html', {'students': students})
+
+
+
+#--------------- Exclude Multiple Conditions
+
+# def student_exclude(request):
+#     students = Student.objects.exclude(name="Sinan", age=19)
+#     return render(request, 'student_exclude.html', {'students': students})
+
+
+
+#--------------- Exclude with Lookups
+
+# def student_exclude(request):
+#     students = Student.objects.exclude(age__gt=22)
+#     return render(request, 'student_exclude.html', {'students': students})
+
+
+
+#--------------- Exclude with chaining
+
+# def student_exclude(request):
+#     students = Student.objects.exclude(name="Sinan").filter(age__lt=21)
+#     return render(request, 'student_exclude.html', {'students': students})
+
+
+
+#--------------- Exclude with __in
+
+def student_exclude(request):
+    students = Student.objects.exclude(age__in=[21,22,23])
+    return render(request, 'student_exclude.html', {'students': students})
 
 
 
