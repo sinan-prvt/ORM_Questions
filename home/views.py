@@ -218,9 +218,6 @@ def student_q(request):
 
 
 
-
-
-
 #=================================== annotate() ============================================== 
 
 
@@ -270,67 +267,90 @@ def student_annotate(request):
 
 
 
+#=================================== aggregate() ============================================== 
 
 
 
+#---------------- Average age of Students
 
-# def course_list(request):
-#     courses = Student.objects.aggregate(avg_age=Avg('age'))
-#     return render(request, 'student_annotate.html', {'courses': courses})
+# def student_aggregate(request):
+    courses = Student.objects.aggregate(avg_age=Avg('age'))
+    return render(request, 'student_aggregate.html', {'courses': courses})
 
 
-# def course_list(request):
-#     courses = Student.objects.aggregate(sum_age=Sum('age'))
-#     return render(request, 'student_annotate.html', {'courses':courses})
 
-# def course_list(request):
+#---------------- Total age of Students
+
+# def student_aggregate(request):
+    courses = Student.objects.aggregate(sum_age=Sum('age'))
+    return render(request, 'student_aggregate.html', {'courses':courses})
+
+
+
+#---------------- Maximum age of Students
+
+# def student_aggregate(request):
 #     courses = Student.objects.aggregate(max_age=Max('age'))
-#     return render(request, 'student_annotate.html', {'courses': courses})
-
-# def course_list(request):
-#     courses = Student.objects.aggregate(avg_age=Avg('age'),
-#                                         sum_age=Sum('age'),
-#                                         max_age=Max('age')
-#                                         )
-#     return render(request, 'student_annotate.html', {'courses': courses})
+#     return render(request, 'student_aggregate.html', {'courses': courses})
 
 
-# def course_list(request):
-#     students = Student.objects.values()
-#     return render(request, 'student_annotate.html', {'students': students})
+
+#---------------- Multiple Aggragations
+
+def student_aggregate(request):
+    courses = Student.objects.aggregate(avg_age=Avg('age'),
+                                        sum_age=Sum('age'),
+                                        max_age=Max('age')
+                                        )
+    return render(request, 'student_aggregate.html', {'courses': courses})
 
 
-# def course_list(request):
-#     students = Student.objects.filter(age__gt=22).values('name')
-#     return render(request, 'student_annotate.html', {'students': students})
 
 
-# def course_list(request):
+
+
+
+#=================================== value() ============================================== 
+
+
+
+
+def student_value(request):
+    students = Student.objects.values()
+    return render(request, 'student_value.html', {'students': students})
+
+
+def student_value(request):
+    students = Student.objects.filter(age__gt=22).values('name')
+    return render(request, 'student_value.html', {'students': students})
+
+
+# def student_value(request):
 #     students = Student.objects.values('name','age').order_by('age')
-#     return render(request, 'student_annotate.html', {'students': students})
+#     return render(request, 'student_value.html', {'students': students})
 
 
-# def course_list(request):
+# def student_aggregate(request):
 #     students = Student.objects.values_list()
 #     return render(request, 'student_annotate.html', {'students': students})
 
 
-# def course_list(request):
+# def student_aggregate(request):
 #     students = Student.objects.filter(age__gt=22).values_list('name', flat=True)
 #     return render(request, 'student_annotate.html', {'students': students})
 
 
-# def course_list(request):
+# def student_aggregate(request):
 #     students = Student.objects.filter(age__gt=21).values_list('name', 'course').order_by('age')
 #     return render(request, 'student_annotate.html', {'students': students})
 
 
-# def course_list(request):
+# def student_aggregate(request):
 #     students = Student.objects.update(age=F('age') + 1)
 #     students = Student.objects.all()
 #     return render(request, 'student_annotate.html', {'students': students})
 
-# def course_list(request):
+# def student_aggregate(request):
 #     course = Course.objects.get(title='Python')
 #     Student.objects.filter(course=course).update(age=F('age') + 2)
 #     students = Student.objects.all()
